@@ -785,7 +785,37 @@ class itenary_model
     }
 
 
+    public function getDatesFromRange($start, $end, $format = 'Y-m-d')
+    {
 
+        // Declare an empty array 
+        $array = array();
+
+        // Variable that store the date interval 
+        // of period 1 day 
+        $interval = new DateInterval('P1D');
+
+        $realEnd = new DateTime($end);
+        $realEnd->add($interval);
+
+        $period = new DatePeriod(new DateTime($start), $interval, $realEnd);
+
+        // Use loop to store date into array 
+        foreach ($period as $date) {
+            $array[] = $date->format($format);
+        }
+
+        // Return the array elements 
+        return $array;
+    }
+
+    public function gethasilkueribyid($id)
+    {
+        $this->db->query("SELECT * from hasilkueri hk,obyekwisata ow,kabupaten kb where hk.obyekkode=ow.obyekkode 
+        and hk.kabupatenkode=kb.kabupatenkode and hk.obyekkode=:id");
+        $this->db->bind("id", $id);
+        return $this->db->resultSingle();
+    }
 
     public function itenarydisplay($kabkode, $start, $end)
     {
@@ -818,7 +848,6 @@ class itenary_model
         }
 
 
-        array_reverse($daftarhasil);
 
 
         $len = count($daftarhasil);
@@ -839,23 +868,20 @@ class itenary_model
 
         // echo "===";
         // echo "<br>";
-        $daftarhasilbaru = [];
+        // $daftarhasilbaru = [];
 
-        foreach ($alldata as $data) {
-
-
-            $listrute = $this->greedydisplayjarak($data["obyekKODE"]);
-
-            while (count($listrute) > 0) {
-
-                array_push($daftarhasilbaru, $listrute);
-                $listrutes = $this->greedydisplayjarak($listrute["obyekasal"]);
-                $listrute = $listrutes;
-            }
-        }
+        // foreach ($alldata as $data) {
 
 
+        //     $listrute = $this->greedydisplayjarak($data["obyekKODE"]);
 
+        //     while (count($listrute) > 0) {
+
+        //         array_push($daftarhasilbaru, $listrute);
+        //         $listrutes = $this->greedydisplayjarak($listrute["obyekasal"]);
+        //         $listrute = $listrutes;
+        //     }
+        // }
 
 
 
@@ -864,22 +890,20 @@ class itenary_model
         $i = 0;
         $len = count($daftarhasil);
 
-        $period = new DatePeriod(
-            new DateTime($start),
-            new DateInterval('P1D'),
-            new DateTime($end)
-        );
+        $period = $this->getDatesFromRange($start, $end);
+
         $dateawal = new DateTime();
         $dateakhir = new DateTime();
         $jamawal = $dateawal->setTime(9, 0);
+        $jam = $dateawal->setTime(9, 0);
         $jamakhir = $dateakhir->setTime(17, 0);
         // $jamawal = time(10:00:00);
         // echo $date->format('H:i:s');
+
         $angka = 0;
-        $jamawal->setTime(9, $angka);
         // echo $jam->format('H:i:s');
-        $timestampawal = strtotime($jamawal->format('H:i:s'));
-        $timestampakhir = strtotime($jamakhir->format('H:i:s'));
+
+
         // echo $jamawal->format('H:i:s');
         // var_dump($timestampawal);
         // echo "<br>";
@@ -897,25 +921,85 @@ class itenary_model
         //     $i++;
         // }
         $j = 1;
+        $semuadata = [];
+        foreach (array_reverse($daftarhasil) as $daft) {
+            array_push($semuadata, $daft["obyekasal"]);
+        }
+        foreach ($alldata as $dt) {
+            array_push($semuadata, $dt["obyekKODE"]);
+        }
+        echo '    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Pesona Jawa</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" href="http://localhost/itenary/public/index">Itenary Greedy</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="http://localhost/itenary/itenary/planner">Itenary Kabupaten</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>';
+
         foreach ($period as $per) {
-            echo $per->format('Y-m-d');
-            echo "<br>";
-            if ($j == 1) {
-                foreach ($daftarhasil as $daft) {
-                    echo $daft["obyekasal"];
-                    echo "<br>";
-                }
-            } else {
-                foreach ($alldata as $dt) {
-                    echo $dt["obyekKODE"];
-                    echo "<br>";
+            echo "<h2>$per</h2>";
+
+            foreach ($semuadata as $sem) {
+                $datadetail = $this->gethasilkueribyid($sem);
+
+                $jamawal->setTime(9, $angka);
+
+
+
+                $timestampawal = strtotime($jamawal->format('H:i:s'));
+                $timestampakhir = strtotime($jamakhir->format('H:i:s'));
+                $jam = $jam->setTime(9, $angka);
+
+                if ($timestampawal < $timestampakhir) {
+                    echo '<div class="card" style="width: 50rem;">
+               
+                    <div class="card-body">
+                        <h5 class="card-title">' . $datadetail["obyekNAMA"] . '</h5>
+                        <p class="card-text">Berkunjung :' . $jamawal->format('H:i:s') . '</p>
+                        <p class="card-text">Jam Operasional : ' . $datadetail["jamBUKA"] . ' - ' . $datadetail['jamTUTUP'] . '</p>
+                     
+                        <p class="card-text">Waktu Kunjungan : ' . $datadetail["obyekWAKTUKUNJUNG"] . '</p>
+                       
+                    </div>
+                    </div>';
+
+
+                    $angka += $datadetail["obyekWAKTUKUNJUNG"] + 30;
+
+                    if (($key = array_search($sem, $semuadata)) !== false) {
+                        unset($semuadata[$key]);
+                        continue;
+                    }
+                } else {
+
+                    $angka = 0;
+
+                    break;
                 }
             }
 
-            $j++;
 
             // echo $per->format('Y-m-d');
             // echo "<br>";
         }
+    }
+
+    public function deletekabupaten(){
+        $this->db->query("delete from hasilkueri");
+        $this->db->execute();
+
+        $this->db->query("delete from hasilobyek");
+        $this->db->execute();
+        return true;
     }
 }

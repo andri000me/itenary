@@ -13,20 +13,19 @@
 </head>
 
 <body>
-    <h1>Initeary Planner Algorithm Result</h1>
+
+    <h1>Initeary Planner Algorithm Kabupaten</h1>
 
 
     <div class="col-sm-4">
-        <h5 class="text-danger">Note : Mohon Di perhatikan Penting!!, Jika tidak dilakukan maka data yang ditampilkan berikutnya duplikat/tidak sesuai</h5>
-        <p>Setelah Hasil ini ditampilkan,mohon untuk klik delete Data pada table hasilobyek melalui button di bawah ini
-            karena untuk logika menampilkan datanya tanpa duplicate data masih belum dibuat/masih proses selanjutnya.
-        </p>
-        <form action="<?= BASEURL ?>/itenary/delete">
-            <button type="submit" class="btn btn-danger">Hapus Data Table Hasilobyek</button>
-        </form>
+        <h5 class="text-danger">Note :MOHON KLIK BUTTON BERIKUT UNTUK MEREFRESH!
+            </p>
+            <form action="<?= BASEURL ?>/itenary/deletekab">
+                <button type="submit" class="btn btn-danger">Hapus Data Table History</button>
+            </form>
 
-        <br>
-        <br>
+            <br>
+            <br>
     </div>
 
 

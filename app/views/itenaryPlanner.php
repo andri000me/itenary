@@ -17,6 +17,23 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Pesona Jawa</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" href="<?= BASEURL ?>/index">Itenary Greedy <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="<?= BASEURL ?>/itenary/planner">Itenary Kabupaten</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
     <h1>Initeary Greedy Algorithm</h1>
 
     <div class="col-sm-4">
@@ -58,7 +75,7 @@
 
             </div>
 
-            <div class="input group">
+            <!-- <div class="input group">
                 <h5 class="border-bottom border-success col-12">Choose A Tourist Attraction</h5>
                 <div class="form-group form-check">
                     <input type="checkbox" class="form-check-input" id="popular" name="popular" value="popular">
@@ -69,7 +86,7 @@
                     <label class="form-check-label" for="nearfast">Near-fast</label>
                 </div>
 
-            </div>
+            </div> -->
 
             <button type="submit" class="btn btn-primary">Proses hasil</button>
         </form>

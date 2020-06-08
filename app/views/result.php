@@ -13,6 +13,7 @@
 </head>
 
 <body>
+
     <h1>Initeary Greedy Algorithm</h1>
 
     <div class="col-sm-12">

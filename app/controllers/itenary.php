@@ -55,20 +55,38 @@ class itenary extends Controller
         $kabkode = $_POST["kabupaten"];
         $start = $_POST["startdate"];
         $end = $_POST["enddate"];
-        $popular = $_POST["popular"];
-        $nearfast = $_POST["nearfast"];
+        // $popular = $_POST["popular"];
+        // $nearfast = $_POST["nearfast"];
+
 
         if ($this->model('itenary_model')->itenary_kab($_POST) == true) {
             echo "<script>
-            alert('Berhasil Di proses');
-            document.location.href='" . BASEURL . "/itenary/itenaryresult/" . $kabkode . "/" . $start . "/" . $end . "';  
-            </script> "; //javascript aler notificatio
+                    alert('Berhasil Di proses');
+                    document.location.href='" . BASEURL . "/itenary/itenaryresult/" . $kabkode . "/" . $start . "/" . $end . "';  
+                    </script> "; //javascript aler notificatio
         }
     }
 
     public function itenaryresult($kabkode, $start, $end)
     {
         $data["hasil"] = $this->model("itenary_model")->itenarydisplay($kabkode, $start, $end);
-        $this->view("ItenaryPlannerResult");
+
+
+        $this->view("ItenaryPlannerResult", $data);
+    }
+
+    public function deletekab()
+    {
+        if ($this->model('itenary_model')->deletekabupaten() >= 1) {
+            echo "<script>
+            alert('data berhasil dihapus');
+            document.location.href='" . BASEURL . "/itenary/planner';  
+            </script> "; //javascript aler notificatio
+        } else {
+            echo "<script>
+            alert('data gagal dihapus');
+            document.location.href='" . BASEURL . "/itenary/planner'; 
+            </script> "; //javascript aler notificatio
+        }
     }
 }
